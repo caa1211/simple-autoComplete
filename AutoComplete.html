@@ -1,0 +1,140 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/ xhtml1-transitional.tdt" >
+<html>
+<head>
+	<script type="text/javascript" src="js/autocomplete.js"></script>
+	<title>AutoComplete</title>
+
+<style>
+
+body {
+	padding: 5px;
+	margin: 5px;
+}
+
+form {
+	padding: 0px;
+	margin: 0px;
+}
+
+input {
+	border: 1px solid #000000;
+	width: 200px;
+}
+
+#popup {
+	position: absolute;
+	width: 200px;
+	color: #004a7e;
+}
+
+#popup.show {
+	border: 1px solid #004a7e;
+}
+
+#popup.hide {
+	border: none;
+}
+
+ul {
+	list-style: none;
+	margin: 0px;
+	padding: 0px;
+}
+
+li.mouseOver {
+	background-color: #004a7e;
+	color: #FFFFFF;
+}
+
+li.mouseOut {
+	background-color: #FFFFFF;
+	color: #004a7e;
+}
+
+</style>
+
+<script language="javascript">
+var input;
+var popUp;
+var countrys;
+
+timeZone.sort();
+
+function initialize() {
+	input = document.forms["postform"].timezone;
+	popUp = document.getElementById("popup");
+	countrys = document.getElementById("country");
+}
+
+function clearTimeZone() {
+	for (var i = countrys.childNodes.length - 1;i >= 0;i--) {
+		countrys.removeChild(countrys.childNodes[i]);
+	}
+
+	popUp.className = "hide";
+}
+
+function setTimeZone(zone) {
+	clearTimeZone();
+	popUp.className = "show";
+	var zoneList;
+
+	for (var i = 0;i < zone.length;i++) {
+		zoneList = document.createElement("li");
+		countrys.appendChild(zoneList);
+		zoneList.appendChild(document.createTextNode(zone[i]));
+
+		zoneList.onmouseover = function() {
+			this.className = "mouseOver";
+		}
+
+		zoneList.onmouseout = function() {
+			this.className = "mouseOut";
+		}
+
+		zoneList.onclick = function() {
+			input.value = this.firstChild.nodeValue;
+			clearTimeZone();
+		}
+	}
+}
+
+function findTimeZone() {
+	initialize();
+
+	if (input.value.length > 0) {
+		var result = new Array();
+
+		for (var i = 0;i < timeZone.length;i++) {
+			if (timeZone[i].indexOf(input.value) == 0) {
+				result.push(timeZone[i]);
+			}
+		}
+
+		if (result.length > 0) {
+			setTimeZone(result);
+		}
+
+		else {
+			clearTimeZone();
+		}
+	}
+
+	else {
+		clearTimeZone();
+	}
+}
+</script>
+
+</head>
+
+<body>
+	<form method="post" name="postform" id="postform">
+		<input type="text" name="timezone" id="timezone" onkeyup="findTimeZone();" />
+	</form>
+	<div name="popup" id="popup">
+		<ul name="country" id="country"></ul>
+	</div>
+</body>
+
+</html>
